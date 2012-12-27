@@ -221,6 +221,34 @@ def destroy_list():
         print ("List deleted")
         return
         
+#Search users using a query
+def follow_by_query():
+        from tweepy import models
+        query = raw_input("Type the search query: ")
+        search = api.search_users(query, 500)
+        for i in search:
+                api.create_friendship(i.id)
+        return
+
+
+
+def unfollow_all():
+	print "NOTE: This operation will unfollow all users that you follow!"
+        answer = raw_input("Are you sure? Y/N ")
+        if answer == 'Y':
+                print "Searching following..."
+                following = getFollowing(myself.id)
+                print len(following), "following found."
+                print "Defollowing following..."
+                for i in following:
+                        defollow(i)
+                        following.remove(i)
+                print len(following), "users have been unfollowed."
+                return
+        else:
+                return
+                
+        
 def begin():
         
         begin = 'R'
@@ -241,10 +269,12 @@ def begin():
         print '5. create a list'
         print '6. add users to a list'
         print '7. delete a list'
+        print '8. search users'
+        print '9. unfollow all users'
         while(begin is 'R' or begin is 'r'):
                 answer = input()
-                while (not ((answer == 1) or (answer == 2) or (answer == 3) or (answer == 4) or (answer == 5) or (answer == 6) or (answer == 7))):
-                        print ('Bad choice, try again: 1 = unfollow, 2 = mass-DM, 3 = update your status, 4 = save tweets, 5 = create a list, 6 = add users to a list, 7 = delete a list')
+                while (not ((answer == 1) or (answer == 2) or (answer == 3) or (answer == 4) or (answer == 5) or (answer == 6) or (answer == 7) or (answer == 8) or (answer == 9))):
+                        print ('Bad choice, try again: 1 = unfollow, 2 = mass-DM, 3 = update your status, 4 = save tweets, 5 = create a list, 6 = add users to a list, 7 = delete a list, 8 = search users using a query, 9 = unfollow all the users')
                         answer = input()
         
                 if answer == 1:
@@ -268,6 +298,12 @@ def begin():
 
                 elif answer == 7:
                         destroy_list()
+                        
+                elif answer == 8:
+                        follow_by_query()
+
+                elif answer == 9:
+                        unfollow_all()
 
                 print ('Type R to restart, X to exit')
                 begin = raw_input()
